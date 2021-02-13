@@ -374,7 +374,7 @@ function init(data) {
     };
 
     (function setGameCompleteFlag(){
-        gameComplete = true;
+        gameComplete = false;
     })();
 
     function main() {
