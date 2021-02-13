@@ -29,10 +29,11 @@ function Product(id, name, price, expiryDate) {
 
 // Complete the dateDiff function
 const dateDiff = (date1, date2) => {
-    const d1 = new Date(date1).getDate();
-    const d2 = new Date(date2).getDate();
+    const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+    const firstDate = new Date(date1);
+    const secondDate = new Date(date2);
 
-    return d2 - d1
+    return Math.round(Math.abs((firstDate.getTime() - secondDate.getTime()) / (oneDay)));
 };
 
 // Here, use Object.defineProperty to create property - daysToExpire
@@ -220,7 +221,7 @@ function loadMasterData() {
 const findProductById = id => p => p.id === id;
 
 // Complete this function
-const generateProductId = () => Math.round(Math.random()* 20)
+const generateProductId = () => Math.round(Math.random()* 20);
 
 
 const getProduct = (prodList, pId) => {
@@ -229,7 +230,9 @@ const getProduct = (prodList, pId) => {
 
 
 // Complete this function
-const calculateBill = (prod, tBill) => {};
+const calculateBill = (prod, tBill) => {
+    return tBill + prod.price;
+};
 
 const findPointsToBill = (roundedTotal) => {
     if (roundedTotal > 10 && roundedTotal <= 100) {
@@ -251,12 +254,24 @@ const findPointsToBill = (roundedTotal) => {
 
 
 // Complete this function
-const findPointsForExpDate = (prod) => {};
+const findPointsForExpDate = (prod) => {
+    return prod.daysToExpire < 30 ? 10 : 0;
+};
 
 
 const calculatePoints = (prod, tBill) => {
     let pointsToBill = findPointsToBill(Math.round(tBill));
     let pointsForExpDate = findPointsForExpDate(prod);
+
+    player.score = player.score + pointsToBill + pointsForExpDate;
+
+    if (prod instanceof MagicProduct) {
+        if (prod.isBonus) {
+            player.addPoints(prod.points);
+        } else {
+            player.deductPoints(prod.points);
+        }
+    }
 };
 
 // Complete this function
