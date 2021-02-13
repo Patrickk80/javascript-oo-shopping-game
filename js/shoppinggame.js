@@ -1,22 +1,81 @@
 let gameComplete = false;
 // Define the three constants here
+let name = "unknown";
+let score = 0;
+let items = 0;
 
 // Define the player object here
-
+const player = {
+    name,
+    score,
+    items,
+    getCurrentScore() {
+        return this.score;
+    },
+    addPoints(points) {
+        this.score += points;
+    },
+    deductPoints(points) {
+        this.score -= points;
+    }
+}
 // Define the Product class - write the Constructor function for Product class here
+function Product(id, name, price, expiryDate) {
+    this.id = id;
+    this.name = name;
+    this.price = price;
+    this.expiryDate = expiryDate;
+}
 
 // Complete the dateDiff function
-const dateDiff = (date1, date2) => {};
+const dateDiff = (date1, date2) => {
+    const d1 = new Date(date1).getDate();
+    const d2 = new Date(date2).getDate();
+
+    return d2 - d1
+};
 
 // Here, use Object.defineProperty to create property - daysToExpire
+Object.defineProperty(Product.prototype, "daysToExpire", {
+    get(){
+      return dateDiff(this.expiryDate, new Date());
+    }
+})
 
 // Add method getDetails to Product here
+Product.prototype.getDetails = function () {
+  return `Product Name: ${this.name} , Product Price: ${this.price}`;
+}
 
 // Define the MagicProduct class here
+function MagicProduct(id, name, price, expiryDate, points, isBonus) {
+    Product.call(this, id, name, price, expiryDate);
+    this.points = points;
+    this.isBonus = isBonus;
+
+}
 
 // Establish inheritance between Product() & MagicProduct() here
+MagicProduct.prototype = Object.create(Product.prototype)
 
 // Define Rating class here
+class Rating {
+    constructor() {
+        this.rate = "";
+    }
+
+    set rating(value) {
+        if (value > 1 && value <= 4) {
+            this.rate = "OK";
+        } else if (value >= 5 && value <= 7) {
+            this.rate = "GOOD";
+        } else if (value > 7) {
+            this.rate = "EXCEPTIONAL";
+        } else {
+            this.rate = "BAD";
+        }
+    }
+}
 
 // Complete the loadProducts function
 const loadProducts = (map, prodId) => {
@@ -278,7 +337,7 @@ function init(data) {
         // Create a new instance of Rating and assign it to a variable named playerRating here
         rl.question("How would you rate this game on a scale of 1-10 (1 being the lowest)?:", function (r) {
             if (r == "" || isNaN(r) || r == 0 || r > 10) {
-                console.log("Invalid rating! Please nter a number from 1 - 10".red);
+                console.log("Invalid rating! Please enter a number from 1 - 10".red);
                 rateAndExit();
             } else {
                 // Call rating setter method of playerRating to set user entered rate value here
@@ -307,9 +366,9 @@ function init(data) {
     };
 
     // Uncomment this function once you fully implement the game to be able to run it
-    // (function setGameCompleteFlag(){
-    //     gameComplete = true;
-    // })();
+    (function setGameCompleteFlag(){
+        gameComplete = false;
+    })();
 
     function main() {
         let products = loadMasterData();
