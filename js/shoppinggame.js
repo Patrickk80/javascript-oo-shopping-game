@@ -217,19 +217,16 @@ function loadMasterData() {
     return productsList;
 }
 
-// Complete this function
 const findProductById = id => p => p.id === id;
 
-// Complete this function
-const generateProductId = () => Math.round(Math.random()* 20);
-
+const generateProductId = () => {
+    return Math.floor(Math.random() * (20 - 1) + 1);
+};
 
 const getProduct = (prodList, pId) => {
     return prodList.find(findProductById(pId));
 };
 
-
-// Complete this function
 const calculateBill = (prod, tBill) => {
     return tBill + prod.price;
 };
@@ -252,12 +249,9 @@ const findPointsToBill = (roundedTotal) => {
     }
 };
 
-
-// Complete this function
 const findPointsForExpDate = (prod) => {
     return prod.daysToExpire < 30 ? 10 : 0;
 };
-
 
 const calculatePoints = (prod, tBill) => {
     let pointsToBill = findPointsToBill(Math.round(tBill));
@@ -274,7 +268,6 @@ const calculatePoints = (prod, tBill) => {
     }
 };
 
-// Complete this function
 function init(data) {
     if (Object.is(data, undefined) == false && gameComplete == true) {
         console.log("Welcome to the Shopping Master game! You can shop for groceries and become a Shopping Master!");
@@ -306,7 +299,6 @@ function init(data) {
         });
     }
 
-    // Complete this function
     const shop = (prodList, tBill, lastProd) => {
         let totalBill = tBill;
         const prId = generateProductId();
@@ -328,7 +320,6 @@ function init(data) {
                     exitWon();
                 } else {
                     let iCount = ++player.items;
-                    // Make the Object.defineProperty() call here to set the value of items using the value of iCount
                     Object.defineProperty(player,"items", {
                         value: iCount,
                     });
@@ -353,18 +344,16 @@ function init(data) {
         });
     };
 
-    // Complete this function
     const rateAndExit = () => {
-        // Create a new instance of Rating and assign it to a variable named playerRating here
+        const playerRating = new Rating();
         rl.question("How would you rate this game on a scale of 1-10 (1 being the lowest)?:", function (r) {
             if (r == "" || isNaN(r) || r == 0 || r > 10) {
                 console.log("Invalid rating! Please enter a number from 1 - 10".red);
                 rateAndExit();
             } else {
-                // Call rating setter method of playerRating to set user entered rate value here
-                
-                // Call Object.assign() method here to populate target
-                
+                playerRating.rating = r;
+
+                const target = Object.assign({}, player, playerRating);
                 console.log(`${target.name} you rated this game as ${target.rate}`.green);
                 console.log("Thank you for your valuable feedback.".blue);
                 rl.close();
@@ -372,23 +361,20 @@ function init(data) {
         });
     };
 
-    // Complete this function
     const exitLost = () => {
-        let pointsToReach; // Assign calculated value to pointsToReach here
+        let pointsToReach = 500 - player.getCurrentScore();
         console.log(`Your chances are over! You are short of ${pointsToReach} to become a Shopping Master. Good Luck for next time!`.yellow);
         rateAndExit();
     };
 
-    // Complete this function
     const exitWon = () => {
-        let finalStatus; 
+        let finalStatus = player.status;
         console.log(`Congratulations!!! You became ${finalStatus}!`.blue);
         rateAndExit();
     };
 
-    // Uncomment this function once you fully implement the game to be able to run it
     (function setGameCompleteFlag(){
-        gameComplete = false;
+        gameComplete = true;
     })();
 
     function main() {
